@@ -1,0 +1,8 @@
+aiohttp
+html2text
+markdownify
+bs4
+inquirer
+vmd
+selenium
+readabilipy

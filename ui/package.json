@@ -1,0 +1,23 @@
+{
+  "name": "hackyx",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "parcel build src/index.html",
+    "start": "parcel src/index.html"
+  },
+  "dependencies": {
+    "algoliasearch": "4",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
+    "react-instantsearch": "7.7.2",
+    "typesense-instantsearch-adapter": "^2.8.0"
+  },
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "parcel": "2.5.0",
+    "postcss": "^8.4.38",
+    "process": "^0.11.10",
+    "tailwindcss": "^3.4.3"
+  }
+}

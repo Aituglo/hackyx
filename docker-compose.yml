@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  typesense:
+    image: typesense/typesense:26.0
+    restart: on-failure
+    ports:
+      - "8108:8108"
+    volumes:
+      - ./data:/data
+    command: '--data-dir /data --api-key=test --enable-cors'

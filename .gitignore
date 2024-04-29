@@ -1,0 +1,6 @@
+.DS_Store
+node_modules
+public
+__pycache__
+data/*
+!data/.gitkeep
