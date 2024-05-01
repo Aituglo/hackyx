@@ -3,8 +3,11 @@ services:
   typesense:
     image: typesense/typesense:26.0
     restart: on-failure
+    environment:
+      TYPESENSE_DATA_DIR: /data
+      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
+      TYPESENSE_ENABLE_CORS: "true"
     ports:
       - "8108:8108"
     volumes:
       - ./data:/data
-    command: '--data-dir /data --api-key=test --enable-cors'

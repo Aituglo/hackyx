@@ -1,4 +1,8 @@
 import typesense
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 client = typesense.Client({
   'nodes': [{
@@ -6,7 +10,7 @@ client = typesense.Client({
     'port': '8108',      
     'protocol': 'http'   
   }],
-  'api_key': 'test',
+  'api_key': os.getenv("TYPESENSE_API_KEY"),
   'connection_timeout_seconds': 2
 })
 

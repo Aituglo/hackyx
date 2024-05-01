@@ -1,4 +1,8 @@
 import typesense
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 client = typesense.Client({
   'nodes': [{
@@ -6,7 +10,7 @@ client = typesense.Client({
     'port': '8108',      
     'protocol': 'http'   
   }],
-  'api_key': 'test',
+  'api_key': os.getenv("TYPESENSE_API_KEY"),
   'connection_timeout_seconds': 2
 })
 
@@ -31,3 +35,10 @@ except typesense.exceptions.ObjectAlreadyExists:
   print("Collection already exists")
 except Exception as e:
   print(f"Failed to create collection: {e}")
+  
+api_key = client.keys.create({
+  "description": "Search-only contents key.",
+  "actions": ["documents:search"],
+  "collections": ["contents"]
+})
+print(f"API Key: {api_key['value']}")

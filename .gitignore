@@ -4,3 +4,4 @@ public
 __pycache__
 data/*
 !data/.gitkeep
+.env

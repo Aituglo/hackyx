@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import asyncio, aiohttp, html2text, re
+import asyncio, aiohttp, re
 from utils.souper import souper
 from utils.scraper import capture_web_content
 from utils.typesense import add_document_to_typesense
@@ -13,9 +13,6 @@ async def ctftime_scraper(url, session):
     
     container = soup.find_all("div",{"class":"container"})[1]
 
-    h = html2text.HTML2Text()
-    h.ignore_links = False
-
     heading = container.find('div',{'class':'page-header'})
     title = heading.h2.text.strip()
     
@@ -28,11 +25,7 @@ async def ctftime_scraper(url, session):
     original_writeup_url = link_original_writeup['href'] if link_original_writeup else None
 
     tags = [t.text for t in container.find_all('span', {'class': ['label', 'label-info']})]
-    tags.append("ctftime")
     tags.append("writeup")
-    
-    description_html = soup.find('div', {'id': 'id_description'})
-    
     
     scrape_url = None
     if original_writeup_url:
@@ -72,7 +65,6 @@ async def ctftime_scraper(url, session):
             })
         
 
-
 async def list_writeups(id):
     url = f"https://ctftime.org/event/{id}/tasks/"
     
@@ -92,9 +84,6 @@ async def list_writeups(id):
         td = row.find_all('td')
         st = td[0].text+","+(td[3].text+" writeup(s)").rjust(50-len(td[0].text))
         names.append((st,td[0].a['href']))
-
-    #Find highest rated writeup for each task
-    print("Getting highest rated writeups")
     
     connector = aiohttp.TCPConnector(limit=5)
     async with aiohttp.ClientSession(connector=connector) as session:
