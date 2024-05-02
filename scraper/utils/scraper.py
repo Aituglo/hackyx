@@ -38,6 +38,9 @@ def capture_web_content(url):
 
     driver.quit()
     
+    if not readable_content:
+        return None, None
+    
     text_array = [obj['text'] for obj in readable_content['plain_text']]
     article_content = " ".join(list(dict.fromkeys(text_array)))
 

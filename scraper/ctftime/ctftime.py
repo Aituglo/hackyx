@@ -48,7 +48,7 @@ async def ctftime_scraper(url, session):
     if scrape_url:
         _, content = capture_web_content(scrape_url)
         
-        if content != "":
+        if content and content != "":
             add_document_to_typesense({
                 'title': title,
                 'description': description,
