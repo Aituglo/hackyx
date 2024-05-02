@@ -21,6 +21,7 @@
     "tailwindcss": "^3.4.3"
   },
   "optionalDependencies": {
-    "@parcel/watcher-linux-x64-glibc": "^2.4.1"
+    "@parcel/watcher-linux-x64-glibc": "^2.4.1",
+    "lightningcss-linux-x64-gnu": "^1.24.1"
   }
 }
