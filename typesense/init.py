@@ -6,9 +6,9 @@ load_dotenv()
 
 client = typesense.Client({
   'nodes': [{
-    'host': 'localhost',
-    'port': '8108',      
-    'protocol': 'http'   
+    'host': os.getenv("TYPESENSE_HOST"),
+    'port': os.getenv("TYPESENSE_PORT"),      
+    'protocol': os.getenv("TYPESENSE_PROTOCOL")   
   }],
   'api_key': os.getenv("TYPESENSE_API_KEY"),
   'connection_timeout_seconds': 2
@@ -36,7 +36,7 @@ except Exception as e:
   
 api_key = client.keys.create({
   "description": "Search-only contents key.",
-  "actions": ["documents:search"],
+  "actions": ["documents:search", "collections:get"],
   "collections": ["contents"]
 })
 print(f"API Key: {api_key['value']}")

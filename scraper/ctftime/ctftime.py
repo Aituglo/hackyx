@@ -3,7 +3,6 @@ import asyncio, aiohttp, re
 from utils.souper import souper
 from utils.scraper import capture_web_content
 from utils.typesense import add_document_to_typesense
-from markdownify import markdownify as md
 
 async def ctftime_scraper(url, session):
     print("Parsing {}".format(url))
@@ -14,13 +13,20 @@ async def ctftime_scraper(url, session):
     container = soup.find_all("div",{"class":"container"})[1]
 
     heading = container.find('div',{'class':'page-header'})
-    title = heading.h2.text.strip()
-    
+    event = soup.find('a', href=re.compile("^\/event\/\d+$"))
+    if event:
+        title = f"{event.text} | {heading.h2.text.strip()}"
+    else:
+        title = f"{heading.h2.text.strip()}"
+        
+        
     author_link = container.find('a', href=re.compile(r"/user/\d+"))
     
     if author_link:
-        author_name = author_link.text
-    
+        description = soup.find('meta', attrs={'name':'description'}).get('content') + " by " + author_link.text
+    else:
+        description = soup.find('meta', attrs={'name':'description'}).get('content')
+
     link_original_writeup = container.find('a', text="Original writeup")
     original_writeup_url = link_original_writeup['href'] if link_original_writeup else None
 
@@ -30,23 +36,10 @@ async def ctftime_scraper(url, session):
     scrape_url = None
     if original_writeup_url:
         if re.match('https?:\/\/github.com\/.*', original_writeup_url):
-            soup = await souper(original_writeup_url)
-            if not soup:
+            if original_writeup_url.endswith('.md') and "blob" in original_writeup_url:
+                scrape_url = original_writeup_url
+            else:
                 return
-            article = soup.find("article")
-            if not article:
-                return
-            markdown_content = md(article.decode_contents())
-
-            add_document_to_typesense({
-                'title': title,
-                'url': original_writeup_url,
-                'authors': [author_name] if author_name else [],
-                'tags': tags,
-                'content': markdown_content
-            })
-            
-            return
         else:
             scrape_url = original_writeup_url
     else:
@@ -58,8 +51,8 @@ async def ctftime_scraper(url, session):
         if content != "":
             add_document_to_typesense({
                 'title': title,
+                'description': description,
                 'url': scrape_url,
-                'authors': [author_name] if author_name else [],
                 'tags': tags,
                 'content': content
             })
@@ -78,7 +71,6 @@ async def list_writeups(id):
     #Get all writeup names and number of writeups
     rows = soup.find_all("tr")
     if not rows:
-        print(soup.find('div',{'class':'well'}).text)
         return  
     for row in rows[1:]:
         td = row.find_all('td')

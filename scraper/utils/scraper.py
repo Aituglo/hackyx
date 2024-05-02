@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 from readabilipy import simple_json_from_html_string
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
@@ -9,10 +11,12 @@ def capture_web_content(url):
     parsed_url = urlparse(url)
     fragment = parsed_url.fragment
     
-    options = FirefoxOptions()
+    options = Options()
     options.add_argument("--headless")
 
-    driver = webdriver.Firefox(options=options)
+    webdriver_service = Service(ChromeDriverManager().install())
+
+    driver = webdriver.Chrome(service=webdriver_service, options=options)
     driver.get(url)
     
     if fragment:

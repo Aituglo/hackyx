@@ -7,3 +7,4 @@ selenium
 readabilipy
 python-dotenv
 typesense
+webdriver_manager

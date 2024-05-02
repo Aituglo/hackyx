@@ -32,7 +32,6 @@ jobs:
           TYPESENSE_PROTOCOL: ${{ vars.TYPESENSE_PROTOCOL }}
         run: |
           cd ui
-          echo "$TYPESENSE_HOST:$TYPESENSE_PORT"
           npm install
           npm run build
       - name: Upload artifact

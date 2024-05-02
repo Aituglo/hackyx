@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Configure,
   Hits,
@@ -7,19 +7,25 @@ import {
   SearchBox,
   useInstantSearch,
 } from 'react-instantsearch';
+const Typesense = require('typesense');
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
+const typesenseInfos = {
+  apiKey: process.env.TYPESENSE_SEARCH_API_KEY,
+  nodes: [
+    {
+      host: process.env.TYPESENSE_HOST,
+      port: process.env.TYPESENSE_PORT,
+      protocol: process.env.TYPESENSE_PROTOCOL,
+    },
+  ],
+  connectionTimeoutSeconds: 2,
+};
+
+const typesenseClient = new Typesense.Client(typesenseInfos);
+
 const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
-  server: {
-    apiKey: process.env.TYPESENSE_SEARCH_API_KEY,
-    nodes: [
-      {
-        host: process.env.TYPESENSE_HOST,
-        port: process.env.TYPESENSE_PORT,
-        protocol: process.env.TYPESENSE_PROTOCOL,
-      },
-    ],
-  },
+  server: typesenseInfos,
   additionalSearchParameters: {
     query_by: 'title, content, description, tags',
   },
@@ -29,6 +35,20 @@ const searchClient = typesenseInstantsearchAdapter.searchClient;
 const future = { preserveSharedStateOnUnmount: true };
 
 export function App() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    typesenseClient
+      .collections('contents')
+      .retrieve()
+      .then(function (collection) {
+        setCount(collection.num_documents);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <div>
       <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
@@ -66,10 +86,13 @@ export function App() {
           </InstantSearch>
         </div>
         <div className="footer-social-icons mt-auto pb-5">
+          {count > 0 && (
+            <h4 className="text-center">{count} contents indexed</h4>
+          )}
           <h4 className="text-center">
             <a
               className="underline cursor-pointer"
-              href="https://forms.gle/WmPKmbA2M1XE7x2S9"
+              href="https://github.com/aituglo/hackyx"
               target="_blank"
             >
               Add a content
@@ -120,24 +143,22 @@ function Description() {
   return (
     <div className="text-center pt-5">
       <p>Hackyx is a search engine for cybersecurity.</p>
-      <p>
-        It is built for the community so anyone can add a new content to it.
-      </p>
       <br />
       <p>
         The aim of this project is to easily find any resource related to IT
-        security like CTF writeup, article or Bug Bounty reports.
+        security like CTF writeups, articles or Bug Bounty reports.
       </p>
       <br />
       <p>
-        Feel free to contribute on the project on{' '}
+        Feel free to contribute on{' '}
         <a
           className="underline cursor-pointer"
           target="_blank"
           href="https://github.com/aituglo/hackyx"
         >
           Github
-        </a>.
+        </a>
+        .
       </p>
     </div>
   );
@@ -160,7 +181,10 @@ function Hit({ hit }) {
           <div className="flex gap-0.5">
             {hit.tags &&
               hit.tags.map((tag) => (
-                <div key={tag} className="px-1.5 py-0.5 text-xs font-medium text-center text-white bg-black rounded-md">
+                <div
+                  key={tag}
+                  className="px-1.5 py-0.5 text-xs font-medium text-center text-white bg-black rounded-md"
+                >
                   {tag}
                 </div>
               ))}
