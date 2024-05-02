@@ -20,10 +20,8 @@ contents_schema = {
     {'name': 'title', 'type': 'string' },
     {'name': 'url', 'type': 'string' },
     {'name': 'description', 'type': 'string', 'optional': True },
-    {'name': 'authors', 'type': 'string[]', 'optional': True },
     {'name': 'tags', 'type': 'string[]', 'optional': True },
-    {'name': 'content', 'type': 'string'},
-    {'name': 'date', 'type': 'string', 'optional': True }
+    {'name': 'content', 'type': 'string'}
   ]
 }
 

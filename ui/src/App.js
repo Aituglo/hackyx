@@ -11,7 +11,7 @@ import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
 const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
   server: {
-    apiKey: 'test',
+    apiKey: process.env.TYPESENSE_SEARCH_API_KEY,
     nodes: [
       {
         host: 'localhost',
@@ -21,7 +21,7 @@ const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
     ],
   },
   additionalSearchParameters: {
-    query_by: 'title, content',
+    query_by: 'title, content, description, tags',
   },
 });
 const searchClient = typesenseInstantsearchAdapter.searchClient;
@@ -32,7 +32,7 @@ export function App() {
   return (
     <div>
       <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
-        <div class="p-12 w-full sm:max-w-2xl sm:mx-auto">
+        <div className="p-12 w-full sm:max-w-2xl sm:mx-auto">
           <h1 className="text-center pt-20 mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
             HACKYX
           </h1>
@@ -65,8 +65,8 @@ export function App() {
             </div>
           </InstantSearch>
         </div>
-        <div class="footer-social-icons mt-auto pb-5">
-          <h4 class="text-center">
+        <div className="footer-social-icons mt-auto pb-5">
+          <h4 className="text-center">
             <a
               className="underline cursor-pointer"
               href="https://forms.gle/WmPKmbA2M1XE7x2S9"
@@ -75,23 +75,23 @@ export function App() {
               Add a content
             </a>
           </h4>
-          <ul class="social-icons text-center ">
+          <ul className="social-icons text-center ">
             <li>
               <a
                 href="https://x.com/aituglo"
                 target="_blank"
-                class="social-icon"
+                className="social-icon"
               >
-                <i class="fa fa-twitter"></i>
+                <i className="fa fa-twitter"></i>
               </a>
             </li>
             <li>
               <a
                 href="https://github.com/aituglo/hackyx"
                 target="_blank"
-                class="social-icon"
+                className="social-icon"
               >
-                <i class="fa fa-github"></i>
+                <i className="fa fa-github"></i>
               </a>
             </li>
           </ul>
@@ -137,15 +137,7 @@ function Description() {
           href="https://github.com/aituglo/hackyx"
         >
           Github
-        </a>{' '}
-        or by adding a new content{' '}
-        <a
-          className="underline cursor-pointer"
-          target="_blank"
-          href="https://forms.gle/WmPKmbA2M1XE7x2S9"
-        >
-          here
-        </a>
+        </a>.
       </p>
     </div>
   );
@@ -168,7 +160,7 @@ function Hit({ hit }) {
           <div className="flex gap-0.5">
             {hit.tags &&
               hit.tags.map((tag) => (
-                <div className="px-1.5 py-0.5 text-xs font-medium text-center text-white bg-black rounded-md">
+                <div key={tag} className="px-1.5 py-0.5 text-xs font-medium text-center text-white bg-black rounded-md">
                   {tag}
                 </div>
               ))}
