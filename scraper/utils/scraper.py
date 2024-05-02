@@ -47,7 +47,7 @@ def capture_web_content(url):
         else:
             return None, None
     except Exception as e:
-        print("Failed to capture web content: ", e)
+        print("An error has occured with  ", url)
         driver.quit()
         return None, None
   

@@ -27,7 +27,9 @@ const typesenseClient = new Typesense.Client(typesenseInfos);
 const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
   server: typesenseInfos,
   additionalSearchParameters: {
-    query_by: 'title, content, description, tags',
+    query_by: 'title, description, tags, content',
+    numTypos: 0,
+    typoTokensThreshold: 1,
   },
 });
 const searchClient = typesenseInstantsearchAdapter.searchClient;
@@ -76,10 +78,12 @@ export function App() {
                 />
 
                 <EmptyQueryBoundary fallback={<Description />}>
-                  <Hits hitComponent={Hit} />
-                  <div className="pagination flex justify-center pt-5">
-                    <Pagination />
-                  </div>
+                  <NoResultsBoundary fallback={<NoResults />}>
+                    <Hits hitComponent={Hit} />
+                    <div className="pagination flex justify-center pt-5">
+                      <Pagination />
+                    </div>
+                  </NoResultsBoundary>
                 </EmptyQueryBoundary>
               </div>
             </div>
@@ -159,6 +163,33 @@ function Description() {
           Github
         </a>
         .
+      </p>
+    </div>
+  );
+}
+
+function NoResultsBoundary({ children, fallback }) {
+  const { results } = useInstantSearch();
+
+  if (!results.__isArtificial && results.nbHits === 0) {
+    return (
+      <>
+        {fallback}
+        <div hidden>{children}</div>
+      </>
+    );
+  }
+
+  return children;
+}
+
+function NoResults() {
+  const { indexUiState } = useInstantSearch();
+
+  return (
+    <div>
+      <p>
+        No results for <q>{indexUiState.query}</q>.
       </p>
     </div>
   );

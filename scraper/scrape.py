@@ -2,7 +2,7 @@ import asyncio
 from ctftime.ctftime import list_writeups
 
 async def main():
-    for i in range(58, 2270):
+    for i in range(1000, 2270):
       await list_writeups(i)
 
 if __name__ == "__main__":
