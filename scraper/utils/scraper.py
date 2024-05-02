@@ -38,11 +38,11 @@ def capture_web_content(url):
 
     driver.quit()
     
-    if not readable_content:
-        return None, None
-    
-    text_array = [obj['text'] for obj in readable_content['plain_text']]
-    article_content = " ".join(list(dict.fromkeys(text_array)))
+    if readable_content is not None and readable_content['plain_text'] is not None:    
+        text_array = [obj['text'] for obj in readable_content['plain_text']]
+        article_content = " ".join(list(dict.fromkeys(text_array)))
 
-    return readable_content["title"], article_content
+        return readable_content["title"], article_content
+    else:
+        return None, None
   
