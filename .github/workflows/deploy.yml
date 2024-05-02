@@ -25,6 +25,11 @@ jobs:
         with:
           node-version: 18.14
       - name: Install Dependencies and Build
+        env: 
+          TYPESENSE_SEARCH_API_KEY: ${{ env.TYPESENSE_SEARCH_API_KEY }}  
+          TYPESENSE_HOST: ${{ env.TYPESENSE_HOST }}
+          TYPESENSE_PORT: ${{ env.TYPESENSE_PORT }}
+          TYPESENSE_PROTOCOL: ${{ env.TYPESENSE_PROTOCOL }}
         run: |
           cd ui
           npm install

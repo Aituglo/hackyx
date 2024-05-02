@@ -1,5 +1,7 @@
 # Hackyx
 
+[![.github/workflows/deploy.yml](https://github.com/Aituglo/hackyx/actions/workflows/deploy.yml/badge.svg)](https://github.com/Aituglo/hackyx/actions/workflows/deploy.yml)
+
 Hackyx is a search engine for cybersecurity.
 
 It is built for the community so anyone can add a new content to it.
