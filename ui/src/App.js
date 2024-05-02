@@ -14,9 +14,9 @@ const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
     apiKey: process.env.TYPESENSE_SEARCH_API_KEY,
     nodes: [
       {
-        host: 'localhost',
-        port: 8108,
-        protocol: 'http',
+        host: process.env.TYPESENSE_HOST,
+        port: process.env.TYPESENSE_PORT,
+        protocol: process.env.TYPESENSE_PROTOCOL,
       },
     ],
   },
