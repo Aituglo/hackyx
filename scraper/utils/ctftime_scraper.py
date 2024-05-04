@@ -40,8 +40,11 @@ async def ctftime_scraper(url, session):
                 scrape_url = original_writeup_url
             else:
                 return
+        elif "youtube" in original_writeup_url or "youtu.be" in original_writeup_url:
+            return
         else:
             scrape_url = original_writeup_url
+        
     else:
         scrape_url = url
             
@@ -49,13 +52,16 @@ async def ctftime_scraper(url, session):
         _, content = capture_web_content(scrape_url)
         
         if content and content != "":
-            add_document_to_typesense({
-                'title': title,
-                'description': description,
-                'url': scrape_url,
-                'tags': tags,
-                'content': content
-            })
+            try:
+                add_document_to_typesense({
+                    'title': title,
+                    'description': description,
+                    'url': scrape_url,
+                    'tags': tags,
+                    'content': content
+                })
+            except Exception as e:
+                print(f"Failed to add document: {scrape_url}")
         
 
 async def list_writeups(id):
