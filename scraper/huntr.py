@@ -5,16 +5,26 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from readabilipy import simple_json_from_html_string
+from dateutil import parser
 import time
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
-import asyncio
 from utils.souper import souper
-from lxml import etree 
 import json
+
+def get_last_date(soup):
+    rows = soup.find_all("tr")
+    dates = []
+    if not rows:
+        return  
+    for row in rows[1:]:
+        tds = row.find_all('td')
+        for td in tds:
+            dates.append(td.find_all('span')[0].text)
+            
+    parsed_dates = [parse_date(date) for date in dates]
+    min_date = min(parsed_dates)
+    print("Last hacktivity retrieve:", min_date.strftime('%B %d, %Y'))
 
 def parse_html(html, reports):
     soup = BeautifulSoup(html, 'html.parser')
@@ -25,6 +35,14 @@ def parse_html(html, reports):
 
     with open('data.json', 'w') as f:
         json.dump(reports, f)
+
+def parse_date(date_str):
+    # Replace suffixes to create a date format that can be parsed
+    date_str = (date_str.replace('st', '')
+                        .replace('nd', '')
+                        .replace('rd', '')
+                        .replace('th', ''))
+    return parser.parse(date_str)
 
 def capture_web_content(url):
     reports = []
@@ -43,18 +61,13 @@ def capture_web_content(url):
         
         time.sleep(3)
 
-        # while driver.find_element(By.ID,'show-more-button'):
-        #    driver.find_element(By.ID,'show-more-button').click()
-        #    html = driver.page_source
-        #    soup = BeautifulSoup(html, 'html.parser')
-        #    last_date = soup.soup.find_all("tr").find_all('span')[-1].
-            
-        #    time.sleep(3)
-
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
-        last_date = soup.soup.find_all("tr").find_all('span')[-1].text
-        print(last_date)
+        while driver.find_element(By.ID,'show-more-button'):
+            driver.find_element(By.ID,'show-more-button').click()
+            html = driver.page_source
+            soup = BeautifulSoup(html, 'html.parser')
+            get_last_date(soup)
+            time.sleep(3)
+        
         parse_html(html, reports)
         
         driver.quit()
