@@ -141,4 +141,4 @@ if __name__ == "__main__":
         url = 'https://huntr.com' + hack['link']
         report = parse_report(url, hack['title'])
         print(f"Indexing {url}")
-        write_yaml(report)
+        add_document_to_typesense(report)
