@@ -5,9 +5,9 @@ def write_yaml(new_content):
     # Define the new content to be added example
     """
     new_content = {
-        'title': 'Titre 2',
-        'description': 'Description 2',
-        'url': 'http://url2.com',
+        'title': 'Titre',
+        'description': 'Description',
+        'url': 'http://url.com',
         'program': 'xxx',
         'cve': 'CVE-XXXX-XXXXX',
         'source': 'platforme', 
