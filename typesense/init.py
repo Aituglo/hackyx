@@ -21,7 +21,11 @@ contents_schema = {
     {'name': 'url', 'type': 'string' },
     {'name': 'description', 'type': 'string', 'optional': True },
     {'name': 'tags', 'type': 'string[]', 'optional': True },
-    {'name': 'content', 'type': 'string'}
+    {'name': 'content', 'type': 'string'},
+    {'name': 'program', 'type': 'string', 'optional': True },
+    {'name': 'cve', 'type': 'string[]', 'optional': True },
+    {'name': 'source', 'type': 'string', 'optional': True },
+    {'name': 'cwe', 'type': 'string', 'optional': True }
   ]
 }
 

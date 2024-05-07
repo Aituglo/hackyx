@@ -7,6 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from dateutil import parser
+from utils.typesense import add_document_to_typesense
 import time
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
@@ -139,4 +140,5 @@ if __name__ == "__main__":
     for hack in hacktivity:
         url = 'https://huntr.com' + hack['link']
         report = parse_report(url, hack['title'])
+        print(f"Indexing {url}")
         write_yaml(report)
