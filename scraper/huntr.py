@@ -140,5 +140,6 @@ if __name__ == "__main__":
     for hack in hacktivity:
         url = 'https://huntr.com' + hack['link']
         report = parse_report(url, hack['title'])
-        print(f"Indexing {url}")
-        add_document_to_typesense(report)
+        if report:
+            print(f"Indexing {url}")
+            add_document_to_typesense(report)
