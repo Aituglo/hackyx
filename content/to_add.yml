@@ -1,1 +1,12 @@
 contents:
+  - title: "GainSec"
+    description: "GainSec is where psychology, privacy and offensive cyber security all meet. There is novel research research, applicable pen testing guidance, war stories and more."
+    url: "http://gainsec.com"
+    tags: 
+      - Penetration Testing
+      - Ethical Hacking
+      - OSINT
+      - Privacy
+      - Psychology
+      - Cyber Security
+      - Offensive Cyber Security
