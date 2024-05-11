@@ -1,1 +1,39 @@
 contents:
+  - title: "Brandon T. Elliott | brandon-t-elliott.github.io"
+    description: "A cybersecurity professional's writeups of interesting CTF challenges and machine walkthroughs."
+    url: "https://brandon-t-elliott.github.io/"
+    tags: 
+      - blog
+      - writeup
+  - title: "I Tried Harder: My OSCP Experience | brandon-t-elliott.github.io"
+    description: "A blog post detailing my experience with OffSec's OSCP certification."
+    url: "https://brandon-t-elliott.github.io/i-tried-harder-my-oscp-experience"
+    tags: 
+      - oscp
+      - offsec
+      - writeup
+  - title: "CTF Writeup: picoCTF 2024 - Trickster | brandon-t-elliott.github.io"
+    description: "A writeup detailing the solution to the Trickster challenge from picoCTF 2024."
+    url: "https://brandon-t-elliott.github.io/trickster"
+    tags: 
+      - writeup
+      - web
+  - title: "CTF Writeup: TAMUctf 2023 - MD5 | brandon-t-elliott.github.io"
+    description: "A writeup detailing the solution to the MD5 challenge from TAMUctf 2023."
+    url: "https://brandon-t-elliott.github.io/md5"
+    tags: 
+      - writeup
+      - crypto
+  - title: "CTF Writeup: Space Heroes CTF - Conspiracy Nut | brandon-t-elliott.github.io"
+    description: "A writeup detailing the solution to the Conspiracy Nut challenge from Space Heroes CTF."
+    url: "https://brandon-t-elliott.github.io/conspiracy-nut"
+    tags: 
+      - writeup
+      - forensics
+  - title: "CTF Writeup: picoCTF 2023 - Java Code Analysis!?! | brandon-t-elliott.github.io"
+    description: "A writeup detailing the solution to the Java Code Analysis!?! challenge from picoCTF 2023."
+    url: "https://brandon-t-elliott.github.io/java-code-analysis"
+    tags: 
+      - writeup
+      - web
+      
