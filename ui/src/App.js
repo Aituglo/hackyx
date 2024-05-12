@@ -277,7 +277,7 @@ function CustomHits() {
   };
 
   const isRefined = (attribute, value) => {
-    currentAppliedFilters = filters.currentFilters.find(
+    const currentAppliedFilters = filters.currentFilters.find(
       (item) => item.attribute === attribute
     );
 
