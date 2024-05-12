@@ -1,19 +1,14 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from readabilipy import simple_json_from_html_string
 import time
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 def capture_web_content(url):
     parsed_url = urlparse(url)
-    fragment = parsed_url.fragment
     
     options = Options()
     options.add_argument("--headless")
@@ -42,7 +37,7 @@ def capture_web_content(url):
         if content:
             final_text += content.text
             
-        final_text = final_text.replace("MenuMenu", " ")
+        final_text = final_text.replace("MenuMenu", " ")        
 
         driver.quit()
         

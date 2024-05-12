@@ -34,6 +34,6 @@ Then, a manual review will be done to validate the content. If it's validated, t
 
 ## TODO
 
-- [ ] Add a filter by tags
-- [ ] Add a filter by type of content
+- [x] Add a filter by tags
+- [x] Add a filter by type of content
 - [ ] Add CI/CD for auto push new content

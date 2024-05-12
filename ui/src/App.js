@@ -5,7 +5,11 @@ import {
   InstantSearch,
   Pagination,
   SearchBox,
+  RefinementList,
   useInstantSearch,
+  useRefinementList,
+  useCurrentRefinements,
+  useClearRefinements,
 } from 'react-instantsearch';
 const Typesense = require('typesense');
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
@@ -27,7 +31,7 @@ const typesenseClient = new Typesense.Client(typesenseInfos);
 const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
   server: typesenseInfos,
   additionalSearchParameters: {
-    query_by: 'title, description, tags, content',
+    query_by: 'title, description, tags, content, cwe, program, source',
     numTypos: 0,
     typoTokensThreshold: 1,
   },
@@ -38,8 +42,24 @@ const future = { preserveSharedStateOnUnmount: true };
 
 export function App() {
   const [count, setCount] = useState(0);
+  const [showFilters, setShowFilters] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const handleShowFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
+  const handleResize = () => {
+    if (window.innerWidth < 720) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
 
   useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    handleResize();
     typesenseClient
       .collections('contents')
       .retrieve()
@@ -54,37 +74,51 @@ export function App() {
   return (
     <div>
       <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
-        <div className="p-12 w-full sm:max-w-2xl sm:mx-auto">
-          <h1 className="text-center pt-20 mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
+        <div className="p-12 w-full sm:mx-auto">
+          <h1 className="text-center mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
             HACKYX
           </h1>
-
           <InstantSearch
             searchClient={searchClient}
             indexName="contents"
             future={future}
           >
             <Configure hitsPerPage={5} />
-            <div className="search-panel">
-              <div className="search-panel__results">
-                <SearchBox
-                  classNames={{
-                    root: 'overflow-hidden z-0 rounded-full relative p-3',
-                    form: 'relative flex z-50 bg-white rounded-full',
-                    input:
-                      'rounded-full flex-1 px-10 py-4 text-gray-700 focus:outline-none',
-                    submitIcon: 'hidden',
-                  }}
-                />
+            <div className={!isMobile ? 'flex' : undefined}>
+              {showFilters && <Filters isMobile={isMobile} setShowFilters={setShowFilters} />}
 
-                <EmptyQueryBoundary fallback={<Description />}>
-                  <NoResultsBoundary fallback={<NoResults />}>
-                    <Hits hitComponent={Hit} />
-                    <div className="pagination flex justify-center pt-5">
-                      <Pagination />
-                    </div>
-                  </NoResultsBoundary>
-                </EmptyQueryBoundary>
+              <div className="flex-auto justify-center">
+                <div className="grid grid-cols-12">
+                  <SearchBox
+                    classNames={{
+                      root: 'col-span-11 overflow-hidden z-0 rounded-full relative ',
+                      form: 'relative z-50 bg-white rounded-full',
+                      input: 'rounded-full text-gray-700 focus:outline-none',
+                      submitIcon: 'hidden',
+                    }}
+                  />
+
+                  <div className="col-span-1 pl-2">
+                    <button
+                      type="button"
+                      onClick={handleShowFilters}
+                      className="text-white bg-black font-medium rounded-full text-m p-2.5 text-center inline-flex items-center me-2"
+                    >
+                      <i className="fa fa-filter"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="pt-5">
+                  <EmptyQueryBoundary fallback={<Description />}>
+                    <NoResultsBoundary fallback={<NoResults />}>
+                      <CustomHits />
+                      <div className="pagination flex justify-center pt-5">
+                        <Pagination />
+                      </div>
+                    </NoResultsBoundary>
+                  </EmptyQueryBoundary>
+                </div>
               </div>
             </div>
           </InstantSearch>
@@ -125,6 +159,141 @@ export function App() {
         </div>
       </div>
     </div>
+  );
+}
+
+function Filters({ isMobile, setShowFilters }) {
+  return isMobile ? (
+    <div className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+      <div className="relative p-4 w-full max-w-2xl max-h-full">
+        <div className="relative bg-white rounded-lg shadow ">
+          <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+            <h3 className="text-xl font-semibold text-gray-900 ">Filters</h3>
+            <button
+              type="button"
+              onClick={() => setShowFilters(false)}
+              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+            >
+              <svg
+                className="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span className="sr-only">Close modal</span>
+            </button>
+          </div>
+          <div className="p-4 md:p-5 space-y-4">
+            <ClearFilters />
+
+            <h2 className="pt-5 mb-4 font-extrabold leading-none tracking-tight text-gray-900">
+              Tags
+            </h2>
+            <RefinementList
+              attribute="tags"
+              searchable={true}
+              showMore={true}
+              limit={5}
+            />
+            <h2 className="pt-5 mb-4 font-extrabold leading-none tracking-tight text-gray-900">
+              CWE
+            </h2>
+            <RefinementList attribute="cwe" searchable={true} />
+            <h2 className="pt-5 mb-4 font-extrabold leading-none tracking-tight text-gray-900">
+              Program
+            </h2>
+            <RefinementList attribute="program" searchable={true} />
+            <h2 className="pt-5 mb-4 font-extrabold leading-none tracking-tight text-gray-900">
+              Source
+            </h2>
+            <RefinementList attribute="source" searchable={true} />
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className="pr-10 flex-0.5">
+      <ClearFilters />
+
+      <h2 className="pt-5 mb-4 font-extrabold leading-none tracking-tight text-gray-900">
+        Tags
+      </h2>
+      <RefinementList
+        attribute="tags"
+        searchable={true}
+        showMore={true}
+        limit={5}
+      />
+      <h2 className="pt-5 mb-4 font-extrabold leading-none tracking-tight text-gray-900">
+        CWE
+      </h2>
+      <RefinementList attribute="cwe" searchable={true} />
+      <h2 className="pt-5 mb-4 font-extrabold leading-none tracking-tight text-gray-900">
+        Program
+      </h2>
+      <RefinementList attribute="program" searchable={true} />
+      <h2 className="pt-5 mb-4 font-extrabold leading-none tracking-tight text-gray-900">
+        Source
+      </h2>
+      <RefinementList attribute="source" searchable={true} />
+    </div>
+  );
+}
+
+function ClearFilters() {
+  const { canRefine, refine } = useClearRefinements();
+
+  return (
+    canRefine && (
+      <div className="text-center">
+        <button
+          type="button"
+          onClick={refine}
+          className="text-white bg-black font-medium rounded-full text-m p-2.5 text-center inline-flex items-center me-2"
+        >
+          Reset filters
+        </button>
+      </div>
+    )
+  );
+}
+
+function CustomHits() {
+  const filters = {
+    currentFilters: useCurrentRefinements().items,
+    tags: useRefinementList({ attribute: 'tags' }),
+    cwe: useRefinementList({ attribute: 'cwe' }),
+    program: useRefinementList({ attribute: 'program' }),
+    source: useRefinementList({ attribute: 'source' }),
+  };
+
+  const isRefined = (attribute, value) => {
+    currentAppliedFilters = filters.currentFilters.find(
+      (item) => item.attribute === attribute
+    );
+
+    if (currentAppliedFilters) {
+      return currentAppliedFilters.refinements.some(
+        (item) => item.value === value
+      );
+    }
+  };
+
+  return (
+    <Hits
+      hitComponent={({ hit }) => (
+        <Hit hit={hit} filters={filters} isRefined={isRefined} />
+      )}
+    />
   );
 }
 
@@ -188,14 +357,14 @@ function NoResults() {
 
   return (
     <div>
-      <p>
+      <p className="text-center">
         No results for <q>{indexUiState.query}</q>.
       </p>
     </div>
   );
 }
 
-function Hit({ hit }) {
+function Hit({ hit, filters, isRefined }) {
   return (
     <article>
       <div>
@@ -210,13 +379,30 @@ function Hit({ hit }) {
           </a>
           {hit.description && <p>{hit.description}</p>}
           <div className="flex gap-0.5">
+            {hit.source && (
+              <div
+                onClick={() => filters.source.refine(hit.source)}
+                className="px-1.5 py-0.5 text-xs font-medium text-center text-white bg-green-800 rounded-md cursor-pointer"
+              >
+                {isRefined('source', hit.source) && 'x'} {hit.source}
+              </div>
+            )}
+            {hit.program && (
+              <div
+                onClick={() => filters.program.refine(hit.program)}
+                className="px-1.5 py-0.5 text-xs font-medium text-center text-white bg-sky-800 rounded-md cursor-pointer"
+              >
+                {isRefined('program', hit.program) && 'x'} {hit.program}
+              </div>
+            )}
             {hit.tags &&
               hit.tags.map((tag) => (
                 <div
                   key={tag}
-                  className="px-1.5 py-0.5 text-xs font-medium text-center text-white bg-black rounded-md"
+                  onClick={() => filters.tags.refine(tag)}
+                  className="px-1.5 py-0.5 text-xs font-medium text-center text-white bg-black rounded-md cursor-pointer"
                 >
-                  {tag}
+                  {isRefined('tags', tag) && 'x'} {tag}
                 </div>
               ))}
           </div>
