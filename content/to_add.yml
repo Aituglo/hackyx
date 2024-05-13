@@ -1,1 +1,8 @@
 contents:
+  - title: "$1000 bounty for accessing any user’s account"
+    description: "$1000 bounty for accessing any user’s account"
+    url: "https://ganofins.com/blog/1000-bounty-for-accessing-any-users-account-improper-authentication-issue/"
+    tags: 
+      - hackerone
+      - improper access control
+      - bug bounty
