@@ -1,1 +1,9 @@
 contents:
+  - title: "Theft of NTLM v2 hash code via Outlook vulnerability (CVE-2023-35636)"
+    description: "Showcasing exploitation of the calendar sharing feature in Microsoft Outlook, whereby adding two headers to an email instructs Outlook to share the content and contact a designated machine, creating an opportunity to intercept NTLM v2 hash code."
+    url: "https://www.acceis.fr/theft-of-ntlm-v2-hash-code-via-outlook-vulnerability-cve-2023-35636/"
+    tags: 
+      - NTLM
+      - Outlook
+      - CVE
+      - Microsoft
