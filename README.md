@@ -1,6 +1,6 @@
 # Hackyx
 
-[https://hackyx.com](https://hackyx.com)
+[https://hackyx.io](https://hackyx.io)
 
 [![.github/workflows/deploy.yml](https://github.com/Aituglo/hackyx/actions/workflows/deploy.yml/badge.svg)](https://github.com/Aituglo/hackyx/actions/workflows/deploy.yml)
 
