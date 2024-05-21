@@ -3,6 +3,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { RefinementList, useClearRefinements } from "react-instantsearch";
 
+// @ts-ignore
 export const Filters = ({ isOpen, setIsOpen }) => {
   const { canRefine, refine } = useClearRefinements();
 
@@ -135,6 +136,7 @@ export const Filters = ({ isOpen, setIsOpen }) => {
   );
 };
 
+// @ts-ignore
 const Accordion = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
 

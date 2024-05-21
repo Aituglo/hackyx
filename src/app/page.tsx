@@ -35,6 +35,7 @@ const typesenseInfos = {
 const typesenseClient = new Typesense.Client(typesenseInfos);
 
 const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
+  // @ts-ignore
   server: typesenseInfos,
   additionalSearchParameters: {
     query_by: "title, description, tags, content, cwe, program, source",

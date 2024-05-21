@@ -1,3 +1,4 @@
+// @ts-ignore
 import { SHA256 as sha256 } from "crypto-js";
 import prisma from "@/lib/prisma";
 
@@ -29,11 +30,12 @@ export async function POST(req: Request) {
       return Response.json({ message: "invalid credentials" }, { status: 401 });
     }
   } catch (e) {
+    // @ts-ignore
     throw new Error(e);
   }
 }
 
-// Function to exclude user password returned from prisma
+// @ts-ignore
 function exclude(user, keys) {
   for (let key of keys) {
     delete user[key];

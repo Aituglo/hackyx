@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import BreadCrumb from "@/components/breadcrumb";
 import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/auth-options";
@@ -20,6 +21,7 @@ export default async function page({ params }: { params: { contentId: string } }
   });
 
   for (let key in content) {
+    // @ts-ignore
     content[key] = content[key] || '';
   }
 

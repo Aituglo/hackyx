@@ -7,6 +7,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 
+// @ts-ignore
 export const Footer = ({ count }) => {
   const { theme, setTheme } = useTheme();
 

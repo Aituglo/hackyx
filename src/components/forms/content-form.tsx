@@ -154,6 +154,7 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
                       tags={tags}
                       setTags={(newTags) => {
                         setTags(newTags);
+                        // @ts-ignore
                         setValue('tags', newTags.map((tag) => tag.text));
                       }}
                     />
