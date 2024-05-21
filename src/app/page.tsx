@@ -72,7 +72,7 @@ export default function App() {
   return (
     <div className="dark:bg-slate-900 bg-slate-100">
       <div className="min-h-screen flex flex-col justify-center">
-        <div className="p-12 w-full sm:mx-auto">
+        <div className="pt-12 md:p-12 p-1 w-full sm:mx-auto">
           <h1 className="text-center pb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-teal-500 text-7xl font-black">
             Hackyx.
           </h1>
@@ -85,7 +85,7 @@ export default function App() {
             <div className="flex">
               <div className="flex-auto justify-center">
                 <div className="relative p-3 w-full">
-                  <div className="relative group">
+                  <div className="relative group ">
                     <div className="absolute transitiona-all duration-1000 opacity-20 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-50 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
                     <div className="overflow-hidden z-0 rounded-full relative p-3">
                       <SearchBox
