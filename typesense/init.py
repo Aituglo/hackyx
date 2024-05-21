@@ -23,7 +23,7 @@ contents_schema = {
     {'name': 'tags', 'type': 'string[]', 'optional': True },
     {'name': 'content', 'type': 'string'},
     {'name': 'program', 'type': 'string', 'optional': True },
-    {'name': 'cve', 'type': 'string[]', 'optional': True },
+    {'name': 'cve', 'type': 'string', 'optional': True },
     {'name': 'source', 'type': 'string', 'optional': True },
     {'name': 'cwe', 'type': 'string', 'optional': True }
   ]

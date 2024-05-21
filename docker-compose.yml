@@ -11,3 +11,14 @@ services:
       - "8108:8108"
     volumes:
       - ./data:/data
+  db:
+    image: 'postgres:13'
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}        
+      POSTGRES_USER: ${POSTGRES_USER}      
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./ui-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
