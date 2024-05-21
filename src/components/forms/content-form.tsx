@@ -1,0 +1,234 @@
+"use client";
+import * as z from "zod";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { TagInput, Tag } from "emblor";
+import { useRouter } from "next/navigation";
+import { createContent, updateContent } from "@/actions/contentActions";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
+import { Heading } from "@/components/ui/heading";
+import { useToast } from "../ui/use-toast";
+
+const formSchema = z.object({
+  title: z.string(),
+  url: z.string(),
+  description: z.string().optional().or(z.literal("")),
+  tags: z.array(z.string()).optional().or(z.literal("")),
+  program: z.string().optional().or(z.literal("")),
+  source: z.string().optional().or(z.literal("")),
+  cwe: z.string().optional().or(z.literal("")),
+  cve: z.string().optional().or(z.literal("")),
+});
+
+type ContentFormValues = z.infer<typeof formSchema>;
+
+interface ContentFormProps {
+  initialData: any | null;
+}
+
+export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const title = initialData ? "Edit content" : "Add a content";
+  const description = initialData ? "Edit a content." : "Add a new content";
+  const toastMessage = initialData ? "Content updated." : "Content added.";
+  const action = initialData ? "Save changes" : "Create";
+
+  const [tags, setTags] = useState<Tag[]>([]);
+
+  const defaultValues = initialData ? initialData : {};
+
+  const form = useForm<ContentFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues,
+  });
+
+  const { setValue } = form;
+
+  const onSubmit = (data: ContentFormValues) => {
+    try {
+      setLoading(true);
+
+      if (initialData) {
+        updateContent(initialData.id, data);
+      } else {
+        createContent(data);
+      }
+
+      router.push(`/dashboard/contents`);
+      toast({
+        variant: "default",
+        title: toastMessage,
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <div className="flex items-center justify-between">
+        <Heading title={title} description={description} />
+      </div>
+      <Separator />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 w-full"
+        >
+          <div className="md:grid md:grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Url</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Url" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Description"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem className="flex flex-col items-start">
+                  <FormLabel className="text-left">Tags</FormLabel>
+                  <FormControl>
+                    <TagInput
+                      {...field}
+                      placeholder="Enter a tag"
+                      tags={tags}
+                      setTags={(newTags) => {
+                        setTags(newTags);
+                        setValue('tags', newTags.map((tag) => tag.text));
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="program"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Program</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Program"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="source"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Source</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Source" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="cwe"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CWE</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="CWE" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="cve"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CVE</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="CVE" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <Button disabled={loading} className="ml-auto" type="submit">
+            {action}
+          </Button>
+        </form>
+      </Form>
+    </>
+  );
+};
