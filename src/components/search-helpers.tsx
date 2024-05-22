@@ -9,7 +9,7 @@ export const EmptyQueryBoundary = ({
 }) => {
   const { indexUiState } = useInstantSearch();
 
-  if (!indexUiState.query) {
+  if (!indexUiState.query && !indexUiState.refinementList) {
     return (
       <>
         {fallback}
