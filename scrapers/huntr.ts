@@ -45,6 +45,7 @@ export async function parseHacktivity() {
       if (date && date.toString() === lastDate.toString()) {
         break;
       } else {
+        // @ts-ignore
         lastDate = date;
       }
       await page.waitForTimeout(3000);
