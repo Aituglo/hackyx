@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && npx playwright install",
+    "init-typesense": "node bin/init-typesense.js",
     "start": "next start",
     "postinstall": "prisma generate",
     "lint": "next lint",
