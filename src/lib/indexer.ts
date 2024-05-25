@@ -3,7 +3,7 @@ import { Readability } from '@mozilla/readability';
 import { JSDOM } from 'jsdom';
 
 export async function fetchContentFromURL(url: string): Promise<string | null> {
-    const browser = await firefox.launch();
+    const browser = await firefox.connect(process.env.BROWSERLESS_URL);
     try {
         const context = await browser.newContext();
         const page = await context.newPage();

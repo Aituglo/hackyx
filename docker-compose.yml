@@ -22,3 +22,9 @@ services:
       - ./ui-data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+  browserless:
+    image: 'ghcr.io/browserless/firefox'
+    restart: always
+    ports:
+      - '3000:3000'
+
