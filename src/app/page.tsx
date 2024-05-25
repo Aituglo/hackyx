@@ -15,6 +15,7 @@ import {
   MixerVerticalIcon,
 } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
+import { ContentModal } from "@/components/modal/content-modal";
 
 const Typesense = require("typesense");
 
@@ -50,11 +51,19 @@ const future = { preserveSharedStateOnUnmount: true };
 export default function App() {
   
   const [count, setCount] = useState(0);
-
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -65,6 +74,7 @@ export default function App() {
         setCount(collection.num_documents);
       })
       .catch(function (error: any) {
+        // @ts-ignore
         console.log(error);
       });
   }, []);
@@ -73,6 +83,7 @@ export default function App() {
     <div className="dark:bg-slate-900 bg-slate-100">
       <div className="min-h-screen flex flex-col justify-center">
         <div className="pt-12 md:p-12 p-1 w-full sm:mx-auto">
+          <ContentModal isOpen={isModalOpen} onClose={closeModal} setIsOpen={setIsModalOpen} />
           <h1 className="text-center pb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-teal-500 text-7xl font-black">
             Hackyx.
           </h1>
@@ -137,7 +148,7 @@ export default function App() {
             </div>
           </InstantSearch>
         </div>
-        <Footer count={count} />
+        <Footer count={count} openModal={openModal} />
       </div>
     </div>
   );

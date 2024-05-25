@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { getTotalContentsCount } from "@/lib/typesense";
 
 export default async function page() {
   const session = await getServerSession(authOptions);
@@ -18,7 +19,7 @@ export default async function page() {
 
   const contents: Content[] = await prisma.content.findMany();
 
-  let totalContent = contents.length;
+  let totalContent = await getTotalContentsCount();
   let contentToIndex = contents.filter((content) => !content.indexed).length;
 
   return (

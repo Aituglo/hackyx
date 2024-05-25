@@ -19,6 +19,9 @@ import {
 import { Input } from "./input";
 import { Button } from "./button";
 import { ScrollArea, ScrollBar } from "./scroll-area";
+import { indexMultipleContent, deleteMultipleContent } from "@/actions/contentActions";
+import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,20 +40,122 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
+  const router = useRouter();
+  const { toast } = useToast(); // Using destructured toast for notifications
+  const selectedRows = table.getSelectedRowModel().rows.map(row => row.original);
 
-  /* this can be used to get the selectedrows 
-  console.log("value", table.getFilteredSelectedRowModel()); */
+  const handleIndexAll = async () => {
+    const result = await indexMultipleContent(data);
+    if (result.success) {
+      toast({
+        variant: "default",
+        title: "All content indexed successfully!"
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: result.error
+      });
+    }
+    router.refresh();
+  };
+
+  const handleDeleteAll = async () => {
+    const result = await deleteMultipleContent(data);
+    if (result.success) {
+      toast({
+        variant: "default",
+        title: "All content deleted successfully!"
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: result.error
+      });
+    }
+    router.refresh();
+  };
+
+  const handleIndexSelected = async () => {
+    const result = await indexMultipleContent(selectedRows);
+    if (result.success) {
+      toast({
+        variant: "default",
+        title: "Selected content indexed successfully!"
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: result.error
+      });
+    }
+    router.refresh();
+  };
+
+  const handleDeleteSelected = async () => {
+    const result = await deleteMultipleContent(selectedRows);
+    if (result.success) {
+      toast({
+        variant: "default",
+        title: "Selected content deleted successfully!"
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: result.error
+      });
+    }
+    router.refresh();
+  };
 
   return (
     <>
-      <Input
-        placeholder={`Search ${searchKey}...`}
-        value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-        onChange={(event) =>
-          table.getColumn(searchKey)?.setFilterValue(event.target.value)
-        }
-        className="w-full md:max-w-sm"
-      />
+      <div className="flex items-center justify-between mb-4">
+        <Input
+          placeholder={`Search ${searchKey}...`}
+          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn(searchKey)?.setFilterValue(event.target.value)
+          }
+          className="w-full md:max-w-sm"
+        />
+        <div className="space-x-2">
+          <Button
+            onClick={handleIndexAll}
+            variant="outline"
+            size="sm"
+          >
+            Index All
+          </Button>
+          <Button
+            onClick={handleDeleteAll}
+            variant="outline"
+            size="sm"
+          >
+            Delete All
+          </Button>
+          <Button
+            onClick={handleIndexSelected}
+            variant="outline"
+            size="sm"
+            disabled={selectedRows.length === 0}
+          >
+            Index Selected
+          </Button>
+          <Button
+            onClick={handleDeleteSelected}
+            variant="outline"
+            size="sm"
+            disabled={selectedRows.length === 0}
+          >
+            Delete Selected
+          </Button>
+        </div>
+      </div>
       <ScrollArea className="rounded-md border h-[calc(80vh-220px)]">
         <Table className="relative">
           <TableHeader>
@@ -102,30 +207,7 @@ export function DataTable<TData, TValue>({
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
     </>
   );
 }
+

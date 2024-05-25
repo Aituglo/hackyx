@@ -20,9 +20,18 @@ import { Separator } from "@/components/ui/separator";
 import { Heading } from "@/components/ui/heading";
 import { useToast } from "../ui/use-toast";
 
+
 const formSchema = z.object({
   title: z.string(),
-  url: z.string(),
+  url: z
+    .string()
+    .url()
+    .refine(
+      (data) => data.startsWith("http://") || data.startsWith("https://"),
+      {
+        message: "URL must start with http:// or https://",
+      },
+    ),
   description: z.string().optional().or(z.literal("")),
   tags: z.array(z.string()).optional().or(z.literal("")),
   program: z.string().optional().or(z.literal("")),
@@ -43,8 +52,6 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
   const [loading, setLoading] = useState(false);
   const title = initialData ? "Edit content" : "Add a content";
   const description = initialData ? "Edit a content." : "Add a new content";
-  const toastMessage = initialData ? "Content updated." : "Content added.";
-  const action = initialData ? "Save changes" : "Create";
 
   const [tags, setTags] = useState<Tag[]>([]);
 
@@ -57,26 +64,47 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
 
   const { setValue } = form;
 
-  const onSubmit = (data: ContentFormValues) => {
+  const onSubmit = async (data: ContentFormValues) => {
     try {
       setLoading(true);
+      let response;
 
       if (initialData) {
-        updateContent(initialData.id, data);
+        response = await updateContent(initialData.id, data);
+        if (response.success) {
+          toast({
+            variant: "default",
+            title: "Content updated successfully.",
+          });
+          router.push(`/dashboard/contents`);
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: response.error,
+          });
+        }
       } else {
-        createContent(data);
+        response = await createContent(data);
+        if (response.success) {
+          toast({
+            variant: "default",
+            title: "Content added successfully.",
+          });
+          router.push(`/dashboard/contents`);
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: response.error,
+          });
+        }
       }
-
-      router.push(`/dashboard/contents`);
-      toast({
-        variant: "default",
-        title: toastMessage,
-      });
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
+        description: error.message || "There was a problem with your request.",
       });
     } finally {
       setLoading(false);
@@ -155,7 +183,11 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
                       setTags={(newTags) => {
                         setTags(newTags);
                         // @ts-ignore
-                        setValue('tags', newTags.map((tag) => tag.text));
+                        setValue(
+                          "tags",
+                          // @ts-ignore
+                          newTags.map((tag) => tag.text),
+                        );
                       }}
                     />
                   </FormControl>
@@ -224,9 +256,13 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
               )}
             />
           </div>
-
-          <Button disabled={loading} className="ml-auto" type="submit">
-            {action}
+          
+          <Button
+            disabled={loading}
+            className="ml-auto"
+            type="submit"
+          >
+            {initialData ? "Save changes" : "Create"}
           </Button>
         </form>
       </Form>
