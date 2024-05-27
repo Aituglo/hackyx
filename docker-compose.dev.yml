@@ -1,0 +1,33 @@
+version: '3.4'
+services:
+  typesense:
+    image: typesense/typesense:26.0
+    restart: on-failure
+    environment:
+      TYPESENSE_DATA_DIR: /data
+      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
+      TYPESENSE_ENABLE_CORS: "true"
+    ports:
+      - "8108:8108"
+    volumes:
+      - typesense-data:/data
+  db:
+    image: 'postgres:13'
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  browserless:
+    image: 'ghcr.io/browserless/firefox'
+    restart: always
+    ports:
+      - '3030:3030'
+
+volumes:
+  typesense-data:
+  postgres-data:

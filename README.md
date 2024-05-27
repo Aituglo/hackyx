@@ -22,3 +22,37 @@ Then, a manual review will be done to validate the content. If it's validated, t
 
 - [x] Add a filter by tags
 - [x] Add a filter by type of content
+
+## Local Development Setup for Hackyx
+To set up the Hackyx project for local development, follow these steps:
+### Environment Setup
+Create a `.env` file based on the template provided in `env.example.txt`.
+### GitHub OAuth Setup
+Create an OAuth application in the GitHub developer settings at [GitHub Developer Settings](https://github.com/settings/developers) to obtain a `GITHUB_ID` and a `GITHUB_SECRET`. When setting up the application, you will need to provide the following information:
+- **Homepage URL**: The base URL of your application, for example `http://localhost:3000`.
+- **Authorization callback URL**: The authorized callback URL for OAuth authentication, which should be `http://localhost:3000/api/auth/callback/github`.
+Add `GITHUB_ID` and `GITHUB_SECRET` to your `.env` file.
+### Docker Services
+Start the required services (PostgreSQL, Typesense, and Browserless) using Docker Compose.
+```
+docker-compose -f docker-compose.dev.yml up
+```
+### Initialize Typesense
+Run the Typesense initialization script.
+```
+npm run init-typesense
+```
+Copy the api key from the output and paste it in the `.env` file in `NEXT_PUBLIC_TYPESENSE_SEARCH_API_KEY`.
+### Database Initialization 
+Generate Prisma client and push the schema to your database.
+```
+npx prisma generate
+npx prisma db push
+```
+### Database UI
+Optionally, you can use Prisma Studio to view and manage your database.
+```
+npx prisma studio
+```
+
+These steps will get your local development environment ready for Hackyx.

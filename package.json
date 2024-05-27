@@ -47,6 +47,7 @@
     "clsx": "^2.0.0",
     "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.4.5",
     "emblor": "^1.0.3",
     "eslint": "8.48.0",
     "eslint-config-next": "^14.0.1",
