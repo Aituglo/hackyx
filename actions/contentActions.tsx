@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { fetchContentFromURL } from "@/lib/indexer";
+import { fetchContentFromURL } from "@/lib/parsers/default";
 import { getServerSession } from "next-auth";
 import { addContentToTypesense, contentExists } from "@/lib/typesense";
 import { authOptions } from "@/lib/auth-options";

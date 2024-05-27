@@ -1,7 +1,7 @@
 import { firefox } from 'playwright';
 import { JSDOM } from 'jsdom';
 import { addContentToTypesense } from '@/lib/typesense';
-import { fetchContentFromURL } from '@/lib/indexer';
+import { fetchContentFromURL } from '@/lib/parsers/default';
 
 function parseHtml(html: string) {
   const dom = new JSDOM(html);

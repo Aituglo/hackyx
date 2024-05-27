@@ -17,12 +17,12 @@ const contentsSchema = {
     { name: 'title', type: 'string' },
     { name: 'url', type: 'string' },
     { name: 'description', type: 'string', optional: true },
-    { name: 'tags', type: 'string[]', optional: true },
+    { name: 'tags', type: 'string[]', optional: true, facet: true },
     { name: 'content', type: 'string' },
-    { name: 'program', type: 'string', optional: true },
-    { name: 'cve', type: 'string', optional: true },
-    { name: 'source', type: 'string', optional: true },
-    { name: 'cwe', type: 'string', optional: true }
+    { name: 'program', type: 'string', optional: true, facet: true },
+    { name: 'cve', type: 'string', optional: true, facet: true },
+    { name: 'source', type: 'string', optional: true, facet: true },
+    { name: 'cwe', type: 'string', optional: true, facet: true }
   ]
 };
 

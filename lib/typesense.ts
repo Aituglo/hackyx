@@ -14,7 +14,8 @@ export async function contentExists(url: string): Promise<boolean> {
   try {
     const searchParameters = {
       'q': url,
-      'query_by': 'url'
+      'query_by': 'url',
+      'filter_by': `url:=${url}`  // Exact match filter
     };
     const result = await client.collections('contents').documents().search(searchParameters);
     return result.found > 0;

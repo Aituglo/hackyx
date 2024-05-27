@@ -53,7 +53,7 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
   const title = initialData ? "Edit content" : "Add a content";
   const description = initialData ? "Edit a content." : "Add a new content";
 
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<Tag[]>(initialData ? initialData.tags.map((tag: string, index: number) => ({ id: index, text: tag })) : []);
 
   const defaultValues = initialData ? initialData : {};
 
@@ -63,6 +63,8 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
   });
 
   const { setValue } = form;
+
+  
 
   const onSubmit = async (data: ContentFormValues) => {
     try {
@@ -120,9 +122,9 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full"
+          className="space-y-8 w-1/2"
         >
-          <div className="md:grid md:grid-cols-3 gap-8">
+          <div className="space-y-4">
             <FormField
               control={form.control}
               name="url"
