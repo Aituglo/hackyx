@@ -16,7 +16,12 @@ const vulnerabilityKeywords = {
   "Auth Bypass": ['Auth Bypass', 'Authentication Bypass'],
   "Android": ['Android'],
   "Cloud": ["Cloud"],
-  "Bleed": ["Bleed"]
+  "Bleed": ["Bleed"],
+  "Man-in-the-Middle": ["MITM", "Man-in-the-Middle"],
+  "Memory Corruption": ["Memory Corruption"],
+  "Race Condition": ["Race Condition", "Race Condition Time to Check"],
+  "Information Disclosure": ["Information Disclosure"],
+  "Insecure Deserialization": ["Insecure Deserialization"]
 };
 
 const securityHeaders = [

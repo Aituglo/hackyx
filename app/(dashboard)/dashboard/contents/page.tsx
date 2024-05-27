@@ -9,6 +9,8 @@ import { ContentClient } from '@/components/tables/contents/client';
 
 const breadcrumbItems = [{ title: "Contents", link: "/dashboard/contents" }];
 
+export const maxDuration = 60;
+
 export default async function page() {
   const session = await getServerSession(authOptions);
 

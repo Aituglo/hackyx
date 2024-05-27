@@ -29,6 +29,8 @@ interface DataTableProps<TData, TValue> {
   searchKey: string;
 }
 
+export const maxDuration = 60;
+
 export function DataTable<TData, TValue>({
   columns,
   data,
