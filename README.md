@@ -2,8 +2,6 @@
 
 [https://hackyx.io](https://hackyx.io)
 
-[![.github/workflows/deploy.yml](https://github.com/Aituglo/hackyx/actions/workflows/deploy.yml/badge.svg)](https://github.com/Aituglo/hackyx/actions/workflows/deploy.yml)
-
 Hackyx is a search engine for cybersecurity.
 
 It is built for the community so anyone can add a new content to it.
@@ -17,11 +15,6 @@ To add a new content, you simply have to fill the form on the main website [http
 You can find it at the bottom of the page "Add a new content".
 
 Then, a manual review will be done to validate the content. If it's validated, the content will be added to the search engine.
-
-## TODO
-
-- [x] Add a filter by tags
-- [x] Add a filter by type of content
 
 ## Local Development Setup for Hackyx
 To set up the Hackyx project for local development, follow these steps:
