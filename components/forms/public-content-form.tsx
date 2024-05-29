@@ -24,9 +24,9 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  // const turnstile = useTurnstile();
+  const turnstile = useTurnstile();
 
-  // const [captchaToken, setCaptchaToken] = useState(null);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   const form = useForm<PublicContentFormValues>({
     resolver: zodResolver(formSchema),
@@ -44,7 +44,7 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
         return;
       }
       setLoading(true);
-      const response = await createPublicContent({ ...data /*, captcha: captchaToken*/ }); // Commented out captcha related code
+      const response = await createPublicContent({ ...data , captcha: captchaToken});
       if (response.success) {
         router.push(`/`);
         toast({
@@ -64,10 +64,10 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
         title: "Uh oh! Something went wrong.",
         description: error.message || "There was a problem with your content.",
       });
-      //turnstile.reset();
+      turnstile.reset();
     } finally {
       setLoading(false);
-      // setCaptchaToken(null); // Commented out for now
+      setCaptchaToken(null);
       setIsOpen(false);
     }
   };
