@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
             variant="outline"
             size="sm"
           >
-            Index All
+            Parse All
           </Button>
           <Button
             onClick={handleDeleteAll}
@@ -146,7 +146,7 @@ export function DataTable<TData, TValue>({
             size="sm"
             disabled={selectedRows.length === 0}
           >
-            Index Selected
+            Parse Selected
           </Button>
           <Button
             onClick={handleDeleteSelected}
