@@ -1,9 +1,9 @@
 export type Content =  {
   id: string;
-  title: string;
+  title?: string;
   url: string;
   description?: string; 
-  tags: string[];
+  tags?: string[];
   program?: string;
   source?: string;
   cwe?: string; 

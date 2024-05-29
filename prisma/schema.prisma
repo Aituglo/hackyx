@@ -9,7 +9,7 @@ datasource db {
 
 model Content {
   id          String   @id @default(cuid())
-  title       String
+  title       String?
   url         String   @unique
   description String?
   tags        String[]
@@ -21,5 +21,5 @@ model Content {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 
-  @@map(name: "contents")
+  @@map("contents")
 }
