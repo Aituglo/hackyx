@@ -35,14 +35,14 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
 
   const onSubmit = async (data: PublicContentFormValues) => {
     try {
-      // if (!captchaToken) { // Commented out for now
-      //   toast({
-      //     variant: "destructive",
-      //     title: "Captcha validation failed",
-      //     description: "Please complete the captcha to proceed.",
-      //   });
-      //   return;
-      // }
+      if (process.env.NODE_ENV === 'production' && !captchaToken) {
+        toast({
+          variant: "destructive",
+          title: "Captcha validation failed",
+          description: "Please complete the captcha to proceed.",
+        });
+        return;
+      }
       setLoading(true);
       const response = await createPublicContent({ ...data /*, captcha: captchaToken*/ }); // Commented out captcha related code
       if (response.success) {
@@ -89,6 +89,12 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
               </FormItem>
             )}
           />
+          {process.env.NODE_ENV === 'production' && (
+            <Turnstile
+              sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              onVerify={(token) => setCaptchaToken(token)}
+            />
+          )}
           <Button disabled={loading} className="ml-auto" type="submit">
             Send
           </Button>

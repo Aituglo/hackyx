@@ -9,23 +9,25 @@ import { extractContentDetails } from "@/lib/ai/extractor.ai";
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 
 export const createPublicContent = async (data: any) => {
-    // if (!data.captcha) {
-    //     return { error: "Captcha token is missing" };
-    // }
+    if (process.env.NODE_ENV === 'production' && !data.captcha) {
+        return { error: "Captcha token is missing" };
+    }
 
-    // const formData = new FormData();
-    // formData.append('secret', TURNSTILE_SECRET_KEY);
-    // formData.append('response', data.captcha);
+    if (process.env.NODE_ENV === 'production') {
+        const formData = new FormData();
+        formData.append('secret', TURNSTILE_SECRET_KEY);
+        formData.append('response', data.captcha);
 
-    // const captchaVerificationResponse = await fetch(`https://challenges.cloudflare.com/turnstile/v0/siteverify`, {
-    //     method: 'POST',
-    //     body: formData
-    // });
-    // const captchaVerificationData = await captchaVerificationResponse.json();
+        const captchaVerificationResponse = await fetch(`https://challenges.cloudflare.com/turnstile/v0/siteverify`, {
+            method: 'POST',
+            body: formData
+        });
+        const captchaVerificationData = await captchaVerificationResponse.json();
 
-    // if (!captchaVerificationData.success) {
-    //     return { error: "Captcha verification failed" };
-    // } 
+        if (!captchaVerificationData.success) {
+            return { error: "Captcha verification failed" };
+        }
+    }
 
     // @ts-ignore
     const { captcha, ...dataWithoutCaptcha } = data;
@@ -40,7 +42,6 @@ export const createPublicContent = async (data: any) => {
         return { success: true };
 
     } catch (error) {
-        console.log(error);
         return { error: "An error occurred" };
     }
 };
@@ -139,7 +140,6 @@ export const indexContent = async (content: any) => {
 
         return { success: true };
     } catch (error) {
-        console.log(error)
         return { error: "An error occurred during indexing" };
     }
 };
