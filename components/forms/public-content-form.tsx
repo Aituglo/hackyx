@@ -41,7 +41,7 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
 
   const onSubmit = async (data: PublicContentFormValues) => {
     try {
-      if (!captchaToken) {
+      if (process.env.NODE_ENV === 'production' && !captchaToken) {
         toast({
           variant: "destructive",
           title: "Captcha validation failed",
@@ -143,10 +143,12 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
               </FormItem>
             )}
           />
-        <Turnstile
-            sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-            onVerify={(token) => setCaptchaToken(token)}
-          />
+          {process.env.NODE_ENV === 'production' && (
+            <Turnstile
+              sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              onVerify={(token) => setCaptchaToken(token)}
+            />
+          )}
           <Button disabled={loading} className="ml-auto" type="submit">
             Send
           </Button>
