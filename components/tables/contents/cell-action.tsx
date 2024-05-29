@@ -44,9 +44,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Failed to index content",
+        title: "Failed to parse content",
         // @ts-ignore
-        description: error.message || "There was a problem indexing the content.",
+        description: error.message || "There was a problem parsing the content.",
       });
     } finally {
       setLoading(false);
@@ -78,11 +78,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
               <Check className="mr-2 h-4 w-4" /> Validate
             </DropdownMenuItem>
           )}
+          {!data.parsed && (
           <DropdownMenuItem
             onClick={handleIndexContent}
           >
             <Plus className="mr-2 h-4 w-4" /> Parse
           </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             onClick={() => router.push(`/dashboard/contents/${data.id}`)}
           >

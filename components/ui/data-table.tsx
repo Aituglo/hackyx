@@ -46,8 +46,11 @@ export function DataTable<TData, TValue>({
   const { toast } = useToast(); // Using destructured toast for notifications
   const selectedRows = table.getSelectedRowModel().rows.map(row => row.original);
 
-  const handleIndexAll = async () => {
-    const result = await indexMultipleContent(data);
+  const handleParseAll = async () => {
+    // Filter data to exclure already parsed item
+    //@ts-ignore
+    const filteredData = data.filter(item => !item.parsed);
+    const result = await indexMultipleContent(filteredData);
     if (result.success) {
       toast({
         variant: "default",
@@ -80,8 +83,11 @@ export function DataTable<TData, TValue>({
     router.refresh();
   };
 
-  const handleIndexSelected = async () => {
-    const result = await indexMultipleContent(selectedRows);
+  const handleParseSelected = async () => {
+    // Filter data to exclure already parsed item
+    //@ts-ignore
+    const filteredData = selectedRows.filter(item => !item.parsed);
+    const result = await indexMultipleContent(filteredData);
     if (result.success) {
       toast({
         variant: "default",
@@ -127,7 +133,7 @@ export function DataTable<TData, TValue>({
         />
         <div className="space-x-2">
           <Button
-            onClick={handleIndexAll}
+            onClick={handleParseAll}
             variant="outline"
             size="sm"
           >
@@ -141,7 +147,7 @@ export function DataTable<TData, TValue>({
             Delete All
           </Button>
           <Button
-            onClick={handleIndexSelected}
+            onClick={handleParseSelected}
             variant="outline"
             size="sm"
             disabled={selectedRows.length === 0}

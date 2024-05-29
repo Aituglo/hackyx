@@ -112,8 +112,9 @@ export const parseContent = async (content: any) => {
     if (!session) return { error: "Unauthorized" };
 
     try {
+        if (content.parsed) return { error: "Content already parsed" };
         const parser = await fetchContentFromURL(content.url);
-        if (!parser) return { error: "An error occurred during indexing" };
+        if (!parser) return { error: "An error occurred during parsing" };
 
         // const aiExtraction = await extractContentDetails(contentText);
         
