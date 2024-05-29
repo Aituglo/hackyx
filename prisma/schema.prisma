@@ -12,11 +12,13 @@ model Content {
   title       String?
   url         String   @unique
   description String?
+  content     String?
   tags        String[]
   program     String?
   source      String?
   cwe         String?
   cve         String?
+  parsed      Boolean  @default(false)
   indexed     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt

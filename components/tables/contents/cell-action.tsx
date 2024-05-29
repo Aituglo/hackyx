@@ -9,8 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Content } from "@/types/content";
-import { Edit, MoreHorizontal, Trash, Plus } from "lucide-react";
-import { deleteContent, indexContent } from "@/actions/contentActions";
+import { Edit, MoreHorizontal, Trash, Plus, Check } from "lucide-react";
+import { deleteContent, parseContent } from "@/actions/contentActions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
@@ -32,11 +32,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const handleIndexContent = async () => {
     setLoading(true);
     try {
-      const response = await indexContent(data);
+      const response = await parseContent(data);
       if (response.success) {
         toast({
           variant: "default",
-          title: "Content indexed successfully",
+          title: "Content parsed successfully",
         });
       } else {
         throw new Error(response.error);
@@ -53,6 +53,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       router.refresh();
     }
   };
+
+
 
   return (
     <>
@@ -71,10 +73,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          {data.parsed && (
+            <DropdownMenuItem onClick={() => router.push(`/dashboard/contents/${data.id}`)}>
+              <Check className="mr-2 h-4 w-4" /> Validate
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             onClick={handleIndexContent}
           >
-            <Plus className="mr-2 h-4 w-4" /> Index
+            <Plus className="mr-2 h-4 w-4" /> Parse
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push(`/dashboard/contents/${data.id}`)}

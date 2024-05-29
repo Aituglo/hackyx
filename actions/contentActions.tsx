@@ -72,6 +72,7 @@ export const updateContent = async (id: string, data: any) => {
     if (!session) return { error: "Unauthorized" };
 
     const alreadyExists = await contentExists(data.url);
+    console.log("UPDATE")
     if (alreadyExists) return { error: "Content already indexed" };
 
     try {
@@ -106,26 +107,56 @@ export const deleteContent = async (id: string) => {
     }
 };
 
-export const indexContent = async (content: any) => {
+export const parseContent = async (content: any) => {
     const session = await getServerSession(authOptions);
     if (!session) return { error: "Unauthorized" };
 
     try {
-        const contentText = await fetchContentFromURL(content.url);
-        if (!contentText) return { error: "An error occurred during indexing" };
+        const parser = await fetchContentFromURL(content.url);
+        if (!parser) return { error: "An error occurred during indexing" };
 
-        const aiExtraction = await extractContentDetails(contentText);
+        // const aiExtraction = await extractContentDetails(contentText);
+        
+        const fakeData = {
+            url: content.url,
+            content: parser.content,
+            title: parser.title,
+            description: "AI Description",
+            tags: ["AI tag"],
+            program: "Blog",
+            cve: "AI CVE",
+            source: "Website",
+            cwe: "AI CWE",
+            parsed: true
+        };
 
+        await prisma.content.update({
+            where: {
+                id: content.id
+            },
+            data: {
+                ...fakeData
+            },
+        })
+
+        return { success: true };
+    } catch (error) {
+        return { error: "An error occurred during indexing" };
+    }
+};
+
+export const validateContent = async (content: any) => {
+    try {
         const addedToTypesense = await addContentToTypesense({
             url: content.url,
-            content: contentText,
-            title: aiExtraction.title,
-            description: aiExtraction.description,
-            tags: aiExtraction.tags,
-            program: aiExtraction.program,
-            cve: aiExtraction.cve,
-            source: aiExtraction.source,
-            cwe: aiExtraction.cwe
+            content: content.content,
+            title: content.title,
+            description: content.description,
+            tags: content.tags,
+            program: content.program,
+            cve: content.cve,
+            source: content.source,
+            cwe: content.cwe
         });
 
         if (!addedToTypesense) {
@@ -140,7 +171,7 @@ export const indexContent = async (content: any) => {
 
         return { success: true };
     } catch (error) {
-        return { error: "An error occurred during indexing" };
+        return { error: "An error occurred during content validation" };
     }
 };
 
@@ -150,7 +181,7 @@ export const indexMultipleContent = async (contents: any[]) => {
 
     try {
         for (const content of contents) {
-            await indexContent(content);
+            await parseContent(content);
         }
         return { success: true };
     } catch (error) {
