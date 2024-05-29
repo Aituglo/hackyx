@@ -116,18 +116,20 @@ export const parseContent = async (content: any) => {
         const parser = await fetchContentFromURL(content.url);
         if (!parser) return { error: "An error occurred during parsing" };
 
-        // const aiExtraction = await extractContentDetails(contentText);
+        const aiExtraction = await extractContentDetails(parser.content);
+        const url = new URL(content.url);
+        const domain = url.hostname;
         
-        const fakeData = {
+        const data = {
             url: content.url,
             content: parser.content,
             title: parser.title,
-            description: "AI Description",
-            tags: ["AI tag"],
+            description: aiExtraction.description,
+            tags: aiExtraction.tags,
             program: "Blog",
-            cve: "AI CVE",
-            source: "Website",
-            cwe: "AI CWE",
+            cve: aiExtraction.cve,
+            source: domain,
+            cwe: aiExtraction.cwe,
             parsed: true
         };
 
@@ -136,7 +138,7 @@ export const parseContent = async (content: any) => {
                 id: content.id
             },
             data: {
-                ...fakeData
+                ...data
             },
         })
 

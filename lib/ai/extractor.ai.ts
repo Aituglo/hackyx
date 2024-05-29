@@ -31,7 +31,9 @@ export const extractContentDetails = async (htmlContent: string): Promise<any> =
     if (response.choices && response.choices.length > 0) {
       const extractedData = response.choices[0].message.content.trim();
       const cleanExtractedData = extractedData.replace(/```json|```/g, '');
-      return JSON.parse(cleanExtractedData);
+      const json = JSON.parse(cleanExtractedData);
+      json.tags = json.tags.filter((tag: string) => tag.toLowerCase() !== 'security' && tag.toLowerCase() !== 'vulnerability');
+      return json;
     } else {
       throw new Error("Failed to extract data from HTML content.");
     }
