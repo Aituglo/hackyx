@@ -18,6 +18,7 @@ import {
 import { MixerVerticalIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { ContentModal } from "@/components/modal/content-modal";
+import Head from "next/head";
 
 const Typesense = require("typesense");
 
@@ -91,82 +92,89 @@ export default function App() {
   }, []);
 
   return (
-    <div className="dark:bg-slate-900 bg-slate-100">
-      <div className="min-h-screen flex flex-col justify-center">
-        <div className="pt-12 md:p-12 p-1 w-full sm:mx-auto">
-          <ContentModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            setIsOpen={setIsModalOpen}
-          />
-          <h1 className="text-center pb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-teal-500 text-7xl font-black">
-            Hackyx.
-          </h1>
-          <InstantSearch
-            searchClient={searchClient}
-            indexName="contents"
-            future={future}
-          >
-            <Configure hitsPerPage={5} />
-            <div className="flex">
-              <div className="flex-auto justify-center">
-                <div className="relative p-3 w-full">
-                  <div className="relative group">
-                    {!isMobile && (
-                      <div className="absolute transitiona-all duration-1000 opacity-20 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-50 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
-                    )}
-                    <div className="overflow-hidden z-0 rounded-full relative p-3">
-                      <SearchBox
-                        classNames={{
-                          root: "",
-                          form: "relative flex z-50 bg-white rounded-full",
-                          input:
-                            "rounded-full flex-1 px-6 py-2 text-gray-700 focus:outline-none dark:bg-white",
-                          reset: "pr-3",
-                          loadingIndicator: "pr-3",
-                        }}
-                        placeholder="Search..."
-                        submitIconComponent={() => (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="pr-4 hover:bg-transparent"
-                            onClick={toggleDropdown}
-                          >
-                            <MixerVerticalIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:text-black" />
-                          </Button>
-                        )}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <Filters isOpen={isOpen} setIsOpen={setIsOpen} />
-
-                <div className="">
-                  <EmptyQueryBoundary fallback={<></>}>
-                    <NoResultsBoundary fallback={<NoResults />}>
-                      <CustomHits />
-                      <div className="pagination flex justify-center pt-5">
-                        <Pagination
+    <>
+      <Head>
+        <title>Hackyx - Explore Cybersecurity Content</title>
+        <meta name="description" content="Discover and explore the latest in cybersecurity, secuyrity research, bug bounty and more with Hackyx." />
+      </Head>
+      <div className="dark:bg-slate-900 bg-slate-100">
+        <div className="min-h-screen flex flex-col justify-center">
+          <div className="pt-12 md:p-12 p-1 w-full sm:mx-auto">
+            <ContentModal
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              setIsOpen={setIsModalOpen}
+            />
+            <h1 className="text-center pb-2 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-teal-500 text-7xl font-black">
+              Hackyx.
+            </h1>
+            <InstantSearch
+              searchClient={searchClient}
+              indexName="contents"
+              future={future}
+            >
+              <Configure hitsPerPage={5} />
+              <div className="flex">
+                <div className="flex-auto justify-center">
+                  <div className="relative p-3 w-full">
+                    <div className="relative group">
+                      {!isMobile && (
+                        <div className="absolute transitiona-all duration-1000 opacity-20 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-50 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
+                      )}
+                      <div className="overflow-hidden z-0 rounded-full relative p-3">
+                        <SearchBox
                           classNames={{
-                            root: "flex",
-                            list: "flex list-none",
-                            item: "m-2 flex",
-                            selectedItem: "underline font-bold",
-                            disabledItem: "opacity-50 pointer-events-none",
-                            link: "p-1",
+                            root: "",
+                            form: "relative flex z-50 bg-white rounded-full",
+                            input:
+                              "rounded-full flex-1 px-6 py-2 text-gray-700 focus:outline-none dark:bg-white",
+                            reset: "pr-3",
+                            loadingIndicator: "pr-3",
                           }}
+                          placeholder="Search..."
+                          submitIconComponent={() => (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="pr-4 hover:bg-transparent"
+                              onClick={toggleDropdown}
+                            >
+                              <MixerVerticalIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:text-black" />
+                            </Button>
+                          )}
                         />
                       </div>
-                    </NoResultsBoundary>
-                  </EmptyQueryBoundary>
+                    </div>
+                  </div>
+                  <Filters isOpen={isOpen} setIsOpen={setIsOpen} />
+
+                  <div className="">
+                    <EmptyQueryBoundary fallback={<></>}>
+                      <NoResultsBoundary fallback={<NoResults />}>
+                        <CustomHits />
+                        <div className="pagination flex justify-center pt-5">
+                          <Pagination
+                            classNames={{
+                              root: "flex",
+                              list: "flex list-none",
+                              item: "m-2 flex",
+                              selectedItem: "underline font-bold",
+                              disabledItem: "opacity-50 pointer-events-none",
+                              link: "p-1",
+                            }}
+                          />
+                        </div>
+                      </NoResultsBoundary>
+                    </EmptyQueryBoundary>
+                  </div>
                 </div>
               </div>
-            </div>
-          </InstantSearch>
+            </InstantSearch>
+          </div>
+          <Footer count={count} openModal={openModal} />
         </div>
-        <Footer count={count} openModal={openModal} />
       </div>
-    </div>
+    </>
   );
 }
+

@@ -8,7 +8,6 @@ import { createPublicContent } from "@/actions/contentActions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { TagInput, Tag } from "emblor";
 import { useToast } from "../ui/use-toast";
 import Turnstile, { useTurnstile } from "react-turnstile";
 
