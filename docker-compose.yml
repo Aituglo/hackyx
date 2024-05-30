@@ -26,5 +26,14 @@ services:
     image: 'ghcr.io/browserless/firefox'
     restart: always
     ports:
+      - '3030:3000'
+  hackyx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+    ports:
       - '3000:3000'
 

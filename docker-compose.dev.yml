@@ -26,7 +26,7 @@ services:
     image: 'ghcr.io/browserless/firefox'
     restart: always
     ports:
-      - '3030:3030'
+      - '3030:3000'
 
 volumes:
   typesense-data:
