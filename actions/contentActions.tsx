@@ -4,6 +4,7 @@ import { fetchContentFromURL } from "@/lib/parsers/default";
 import { getServerSession } from "next-auth";
 import { addContentToTypesense, contentExists } from "@/lib/typesense";
 import { authOptions } from "@/lib/auth-options";
+import { extractContentDetails } from "@/lib/ai/extractor.ai";
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 
@@ -33,7 +34,7 @@ export const createPublicContent = async (data: any) => {
 
     const alreadyExists = await contentExists(dataWithoutCaptcha.url);
     if (alreadyExists) return { error: "Content already indexed" };
-
+    
     try {
         await prisma.content.create({
             data: dataWithoutCaptcha,
@@ -105,17 +106,53 @@ export const deleteContent = async (id: string) => {
     }
 };
 
-export const indexContent = async (content: any) => {
+export const parseContent = async (content: any) => {
     const session = await getServerSession(authOptions);
     if (!session) return { error: "Unauthorized" };
 
     try {
-        const contentText = await fetchContentFromURL(content.url);
-        if (!contentText) return { error: "An error occurred during indexing" };
+        if (content.parsed) return { error: "Content already parsed" };
+        const parser = await fetchContentFromURL(content.url);
+        if (!parser) return { error: "An error occurred during parsing" };
 
+        const aiExtraction = await extractContentDetails(parser.content);
+        const url = new URL(content.url);
+        const domain = url.hostname;
+        
+        const data = {
+            url: content.url,
+            content: parser.content,
+            title: parser.title,
+            description: aiExtraction.description,
+            tags: aiExtraction.tags,
+            program: "Blog",
+            cve: aiExtraction.cve,
+            source: domain,
+            cwe: aiExtraction.cwe,
+            parsed: true
+        };
+
+        await prisma.content.update({
+            where: {
+                id: content.id
+            },
+            data: {
+                ...data
+            },
+        })
+
+        return { success: true };
+    } catch (error) {
+        console.log(error)
+        return { error: "An error occurred during indexing" };
+    }
+};
+
+export const validateContent = async (content: any) => {
+    try {
         const addedToTypesense = await addContentToTypesense({
             url: content.url,
-            content: contentText,
+            content: content.content,
             title: content.title,
             description: content.description,
             tags: content.tags,
@@ -137,7 +174,7 @@ export const indexContent = async (content: any) => {
 
         return { success: true };
     } catch (error) {
-        return { error: "An error occurred during indexing" };
+        return { error: "An error occurred during content validation" };
     }
 };
 
@@ -147,7 +184,7 @@ export const indexMultipleContent = async (contents: any[]) => {
 
     try {
         for (const content of contents) {
-            await indexContent(content);
+            await parseContent(content);
         }
         return { success: true };
     } catch (error) {

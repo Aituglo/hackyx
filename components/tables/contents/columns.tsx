@@ -34,8 +34,21 @@ export const columns: ColumnDef<Content>[] = [
     cell: ({ row }) => <div><a className="text-blue-500" href={row.original.url} target="_blank">{row.original.url}</a></div>,
   },
   {
-    accessorKey: "title",
-    header: "Title",
+    accessorKey: "parsed",
+    header: "Parsed",
+    cell: ({ row }) => (
+      <div>
+        {row.original.parsed ? (
+          <svg className="w-6 h-6 text-green-500" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M5 13l4 4L19 7"></path>
+          </svg>
+        ) : (
+          <svg className="w-6 h-6 text-red-500" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        )}
+      </div>
+    )
   },
   {
     id: "actions",

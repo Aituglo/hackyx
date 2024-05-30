@@ -13,12 +13,9 @@ import { useToast } from "../ui/use-toast";
 import Turnstile, { useTurnstile } from "react-turnstile";
 
 const formSchema = z.object({
-  title: z.string(),
   url: z.string().url().refine((data) => data.startsWith('http://') || data.startsWith('https://'), {
     message: "URL must start with http:// or https://",
-  }),
-  description: z.string().optional().or(z.literal("")),
-  tags: z.array(z.string()).optional().or(z.literal("")),
+  })
 });
 
 type PublicContentFormValues = z.infer<typeof formSchema>;
@@ -29,15 +26,12 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
   const [loading, setLoading] = useState(false);
   const turnstile = useTurnstile();
 
-  const [tags, setTags] = useState<Tag[]>([]);
   const [captchaToken, setCaptchaToken] = useState(null);
 
   const form = useForm<PublicContentFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {},
   });
-
-  const { setValue } = form;
 
   const onSubmit = async (data: PublicContentFormValues) => {
     try {
@@ -50,7 +44,7 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
         return;
       }
       setLoading(true);
-      const response = await createPublicContent({ ...data, captcha: captchaToken });
+      const response = await createPublicContent({ ...data , captcha: captchaToken});
       if (response.success) {
         router.push(`/`);
         toast({
@@ -90,54 +84,6 @@ export const PublicContentForm: React.FC<{ setIsOpen: (isOpen: boolean) => void 
                 <FormLabel>Url</FormLabel>
                 <FormControl>
                   <Input disabled={loading} placeholder="Url" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input disabled={loading} placeholder="Title" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Input disabled={loading} placeholder="Description" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="tags"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tags</FormLabel>
-                <FormControl>
-                  <TagInput
-                    {...field}
-                    placeholder="Enter a tag"
-                    tags={tags}
-                    setTags={(newTags) => {
-                      setTags(newTags);
-                      // @ts-ignore
-                      setValue('tags', newTags.map((tag) => tag.text));
-                    }}
-                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

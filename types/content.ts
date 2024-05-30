@@ -1,12 +1,14 @@
 export type Content =  {
   id: string;
-  title: string;
+  title?: string;
   url: string;
   description?: string; 
-  tags: string[];
+  content?: string;
+  tags?: string[];
   program?: string;
   source?: string;
   cwe?: string; 
   cve?: string;
   indexed: boolean;
+  parsed: boolean;
 }

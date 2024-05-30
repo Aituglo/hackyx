@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { TagInput, Tag } from "emblor";
 import { useRouter } from "next/navigation";
-import { createContent, updateContent } from "@/actions/contentActions";
+import { createContent, updateContent, validateContent } from "@/actions/contentActions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,7 +50,7 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const title = initialData ? "Edit content" : "Add a content";
+  const title = initialData ? (initialData.parsed ? "Review content" : "Edit content") : "Add a content";
   const description = initialData ? "Edit a content." : "Add a new content";
 
   const [tags, setTags] = useState<Tag[]>(initialData ? initialData.tags.map((tag: string, index: number) => ({ id: index, text: tag })) : []);
@@ -261,11 +261,40 @@ export const ContentForm: React.FC<ContentFormProps> = ({ initialData }) => {
           
           <Button
             disabled={loading}
-            className="ml-auto"
+            className="ml-auto mr-4"
             type="submit"
           >
             {initialData ? "Save changes" : "Create"}
           </Button>
+          
+        {initialData?.parsed && (
+          <Button
+            disabled={loading}
+            className="mt-4 ml-auto"
+            type="button"
+            onClick={async (event) => {
+              event.preventDefault();
+              if (initialData) {
+                const validationResponse = await validateContent(initialData);
+                if (validationResponse.success) {
+                  toast({
+                    variant: "default",
+                    title: "Content validated successfully.",
+                  });
+                  router.push(`/dashboard/contents`);
+                } else {
+                  toast({
+                    variant: "destructive",
+                    title: "Validation failed.",
+                    description: validationResponse.error,
+                  });
+                }
+              }
+            }}
+          >
+            Validate
+          </Button>
+        )}
         </form>
       </Form>
     </>
