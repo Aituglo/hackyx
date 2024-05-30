@@ -1,7 +1,7 @@
 import { firefox } from 'playwright';
 import { JSDOM } from 'jsdom';
 
-export async function parseHackeroneContent(url: string): Promise<string | null> {
+export async function parseHackeroneContent(url: string): Promise<{ title: string; content: string } | null>  {
     const browser = await firefox.connect(process.env.BROWSERLESS_URL);
     try {
         const context = await browser.newContext();
@@ -12,6 +12,7 @@ export async function parseHackeroneContent(url: string): Promise<string | null>
         await page.waitForTimeout(3000);
 
         const content = await page.content();
+        const title = await page.title();
         const dom = new JSDOM(content);
         const document = dom.window.document;
 
@@ -30,7 +31,7 @@ export async function parseHackeroneContent(url: string): Promise<string | null>
 
         finalText = finalText.replace(/MenuMenu/g, ' ');
 
-        return finalText;
+        return { title, content: finalText };
     } catch (error) {
         console.error('Error parsing HackerOne content:', error);
         return null;

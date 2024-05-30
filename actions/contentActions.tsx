@@ -72,7 +72,6 @@ export const updateContent = async (id: string, data: any) => {
     if (!session) return { error: "Unauthorized" };
 
     const alreadyExists = await contentExists(data.url);
-    console.log("UPDATE")
     if (alreadyExists) return { error: "Content already indexed" };
 
     try {
@@ -144,6 +143,7 @@ export const parseContent = async (content: any) => {
 
         return { success: true };
     } catch (error) {
+        console.log(error)
         return { error: "An error occurred during indexing" };
     }
 };

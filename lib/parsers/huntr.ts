@@ -55,7 +55,8 @@ export async function parseHacktivity() {
     const reports = parseHtml(finalHtml);
     for (const report of reports) {
       const reportUrl = 'https://huntr.com' + report.link;
-      const content = await fetchContentFromURL(reportUrl);
+      // @ts-ignore
+      const {title, content} = await fetchContentFromURL(reportUrl);
       if (content) {
         const success = await addContentToTypesense({
           url: reportUrl,

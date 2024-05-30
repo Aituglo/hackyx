@@ -29,7 +29,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     deleteContent(data.id);
   };
 
-  const handleIndexContent = async () => {
+  const handleParseContent = async () => {
     setLoading(true);
     try {
       const response = await parseContent(data);
@@ -80,7 +80,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           )}
           {!data.parsed && (
           <DropdownMenuItem
-            onClick={handleIndexContent}
+            onClick={handleParseContent}
           >
             <Plus className="mr-2 h-4 w-4" /> Parse
           </DropdownMenuItem>
